@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ReactNativeProject1",
-    "slug": "ReactNativeProject1",
+    "name": "ReactNativeProject",
+    "slug": "ReactNativeProject",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
