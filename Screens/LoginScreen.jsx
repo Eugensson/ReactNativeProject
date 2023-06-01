@@ -38,7 +38,6 @@ const LoginScreen = () => {
             <Text style={styles.supportText}>Немає акаунту?</Text>
             <Text style={styles.supportText}>Зареєструватися</Text>
           </View>
-          {/* <View style={styles.decorLine}></View> */}
         </View>
       </ImageBackground>
     </View>
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     backgroundColor: "#F6F6F6",
-    border: 1,
+    borderWidth: 1,
     borderColor: "#E8E8E8",
     borderRadius: 8,
     padding: 16,
@@ -147,16 +146,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",
-  },
-
-  decorLine: {
-    position: "absolute",
-    top: "50%",
-    left: "40",
-    width: 135,
-    borderTopWidth: 5,
-    borderRadius: 100,
-    borderColor: "#212121",
   },
 });
 
