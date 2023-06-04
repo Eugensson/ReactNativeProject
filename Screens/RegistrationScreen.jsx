@@ -1,68 +1,120 @@
+import { useState } from "react";
 import {
   View,
   Image,
   ImageBackground,
   Text,
   TextInput,
-  Button,
+  // Button,
   StyleSheet,
   Dimensions,
   Alert,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 
 // import { Ionicons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 
 const RegistrationScreen = () => {
+  const [login, setLogin] = useState("");
+  const [mail, setMail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isPasswordShow, setShowPassword] = useState(false);
+  const [isLoginFocused, setLoginFocused] = useState(false);
+  const [isMailFocused, setMailFocused] = useState(false);
+  const [isPassFocused, setPassFocused] = useState(false);
+
+  const onSingUp = () => {
+    Alert.alert("Sing Up", `${login} + ${mail} + ${password}`);
+    console.debug("Sing Up", `${login} + ${mail} + ${password}`);
+    setLogin("");
+    setMail("");
+    setPassword("");
+  };
+
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require("../assets/ImageBackground.jpg")}
-        resizeMode="cover"
-        style={styles.backgroundImage}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        style={styles.container}
       >
-        <View style={styles.registrationContainer}>
-          <View style={styles.photoPlaceholder}>
-            <Image
-              style={styles.userImage}
-              source={require("../assets/Avatar.jpg")}
-            />
-            <View style={{ position: "absolute", bottom: 10, right: -12 }}>
-              {/* <Ionicons name="add-circle-outline" size={25} color="#ff6c00" /> */}
-              <EvilIcons
-                name="close-o"
-                size={24}
-                color="#bdbdbd"
-                backgroundColor="#fff"
+        <ImageBackground
+          source={require("../assets/ImageBackground.jpg")}
+          resizeMode="cover"
+          style={styles.backgroundImage}
+        >
+          <View style={styles.registrationContainer}>
+            <View style={styles.photoPlaceholder}>
+              <Image
+                style={styles.userImage}
+                source={require("../assets/Avatar.jpg")}
               />
+              <View style={{ position: "absolute", bottom: 10, right: -12 }}>
+                {/* <Ionicons name="add-circle-outline" size={25} color="#ff6c00" /> */}
+                <EvilIcons
+                  name="close-o"
+                  size={24}
+                  color="#bdbdbd"
+                  backgroundColor="#fff"
+                />
+              </View>
+            </View>
+
+            <Text style={styles.title}>Реєстрація</Text>
+            <TextInput
+              style={[styles.input, isLoginFocused && styles.inputFocused]}
+              placeholder="Логін"
+              value={login}
+              onChangeText={setLogin}
+              onFocus={() => setLoginFocused(true)}
+              onBlur={() => setLoginFocused(false)}
+            />
+            <TextInput
+              style={[styles.input, isMailFocused && styles.inputFocused]}
+              placeholder="Адреса електронної пошти"
+              keyboardType="email-address"
+              value={mail}
+              onChangeText={setMail}
+              onFocus={() => setMailFocused(true)}
+              onBlur={() => setMailFocused(false)}
+            />
+            <View style={[styles.input, isPassFocused && styles.inputFocused]}>
+              <TextInput
+                secureTextEntry={!isPasswordShow}
+                placeholder="Пароль"
+                value={password}
+                onChangeText={setPassword}
+                onFocus={() => setPassFocused(true)}
+                onBlur={() => setPassFocused(false)}
+              />
+              <TouchableOpacity
+                style={styles.showingPas}
+                onPress={() => setShowPassword(!isPasswordShow)}
+              >
+                <View>
+                  {isPasswordShow ? (
+                    <Text style={styles.supportText}>Сховати</Text>
+                  ) : (
+                    <Text style={styles.supportText}>Показати</Text>
+                  )}
+                </View>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={styles.buttonContainer} onPress={onSingUp}>
+              <Text style={styles.button}>Зареєстуватися</Text>
+            </TouchableOpacity>
+            {/* <Button title="Зареєстуватися" style={styles.registrBtn} onPress={onLogin} /> */}
+            <View style={styles.supportContainer}>
+              <Text style={styles.supportText}>Вже є акаунт?</Text>
+              <Text style={styles.supportText}>Увійти</Text>
             </View>
           </View>
-
-          <Text style={styles.title}>Реєстрація</Text>
-          <TextInput style={styles.input} placeholder="Логін"></TextInput>
-          <TextInput
-            style={styles.input}
-            placeholder="Адреса електронної пошти"
-          ></TextInput>
-          <View style={styles.input}>
-            <TextInput placeholder="Пароль"></TextInput>
-            <Text style={styles.showingPas}>Показати</Text>
-          </View>
-          <View style={styles.buttonContainer}>
-            <Text style={styles.button}>Зареєстуватися</Text>
-            {/* <Button
-              title="Зареєстуватися"
-              color="#FF6C00"
-              onPress={() => Alert.alert("WORK")}
-            /> */}
-          </View>
-          <View style={styles.supportContainer}>
-            <Text style={styles.supportText}>Вже є акаунт?</Text>
-            <Text style={styles.supportText}>Увійти</Text>
-          </View>
-        </View>
-      </ImageBackground>
-    </View>
+        </ImageBackground>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -148,6 +200,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    position: "relative",
     width: "100%",
     height: 50,
     backgroundColor: "#F6F6F6",
@@ -158,6 +211,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
+  inputFocused: { borderColor: "#ff6c00" },
+
   supportContainer: {
     flexDirection: "row",
     gap: 5,
@@ -166,15 +221,8 @@ const styles = StyleSheet.create({
 
   showingPas: {
     position: "absolute",
-    bottom: 15,
+    bottom: "80%",
     right: 16,
-    fontStyle: "normal",
-    fontWeight: 400,
-    fontSize: 16,
-    lineHeight: 19,
-    letterSpacing: 0.16,
-    textAlign: "center",
-    color: "#1B4371",
   },
 
   buttonContainer: {
@@ -186,6 +234,16 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: "#FF6C00",
   },
+
+  // registrBtn: {
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   marginTop: 43,
+  //   width: "100%",
+  //   height: 50,
+  //   borderRadius: 100,
+  //   backgroundColor: "#FF6C00",
+  // },
 
   button: {
     fontWeight: 400,

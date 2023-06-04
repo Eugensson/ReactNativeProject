@@ -1,10 +1,22 @@
 import * as React from "react";
-import { View, Text, StyleSheet, Image, Button, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Button,
+  Alert,
+} from "react-native";
 
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
 const PostsScreen = () => {
+  const onAddPost = () => {
+    Alert.alert("WORK");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.postHeader}>
@@ -27,14 +39,11 @@ const PostsScreen = () => {
       </View>
       <View style={styles.postFooter}>
         <SimpleLineIcons name="grid" size={24} color="#212121" />
-        <View style={styles.buttonContainer}>
+
+        <TouchableOpacity style={styles.buttonContainer} onPress={onAddPost}>
           <Text style={styles.button}>+</Text>
-          {/* <Button
-            title="+"
-            color="#ff6c00"
-            onPress={() => Alert.alert("WORK")}
-          /> */}
-        </View>
+        </TouchableOpacity>
+        {/* <Button title="+" color="#ff6c00" onPress={onAddPost} /> */}
         <Feather name="user" size={24} color="#212121" />
       </View>
     </View>

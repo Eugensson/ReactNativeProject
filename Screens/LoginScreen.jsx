@@ -1,46 +1,89 @@
+import { useState } from "react";
 import {
   View,
   ImageBackground,
   Text,
   TextInput,
-  Button,
+  // Button,
   StyleSheet,
+  TouchableOpacity,
   Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 
 const LoginScreen = () => {
+  const [mail, setMail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isPasswordShow, setShowPassword] = useState(false);
+  const [isMailFocused, setMailFocused] = useState(false);
+  const [isPassFocused, setPassFocused] = useState(false);
+
+  const onLogin = () => {
+    Alert.alert("Log In", `${mail} + ${password}`);
+    console.debug("Log In", `${mail} + ${password}`);
+    setMail("");
+    setPassword("");
+  };
+
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require("../assets/ImageBackground.jpg")}
-        resizeMode="cover"
-        style={styles.backgroundImage}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        style={styles.container}
       >
-        <View style={styles.loginContainer}>
-          <Text style={styles.title}>Увійти</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Адреса електронної пошти"
-          ></TextInput>
-          <View style={styles.input}>
-            <TextInput placeholder="Пароль"></TextInput>
-            <Text style={styles.showingPas}>Показати</Text>
+        <ImageBackground
+          source={require("../assets/ImageBackground.jpg")}
+          resizeMode="cover"
+          style={styles.backgroundImage}
+        >
+          <View style={styles.loginContainer}>
+            <Text style={styles.title}>Увійти</Text>
+            <TextInput
+              style={[styles.input, isMailFocused && styles.inputFocused]}
+              placeholder="Адреса електронної пошти"
+              keyboardType="email-address"
+              value={mail}
+              onChangeText={setMail}
+              onFocus={() => setMailFocused(true)}
+              onBlur={() => setMailFocused(false)}
+            />
+            <View style={[styles.input, isPassFocused && styles.inputFocused]}>
+              <TextInput
+                placeholder="Пароль"
+                secureTextEntry={!isPasswordShow}
+                value={password}
+                onChangeText={setPassword}
+                onFocus={() => setPassFocused(true)}
+                onBlur={() => setPassFocused(false)}
+              />
+              <TouchableOpacity
+                style={styles.showingPas}
+                onPress={() => setShowPassword(!isPasswordShow)}
+              >
+                <View>
+                  {isPasswordShow ? (
+                    <Text style={styles.supportText}>Сховати</Text>
+                  ) : (
+                    <Text style={styles.supportText}>Показати</Text>
+                  )}
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity style={styles.buttonContainer} onPress={onLogin}>
+              <Text style={styles.button}>Увійти</Text>
+            </TouchableOpacity>
+            {/* <Button title="Увійти" style={styles.loginBtn} onPress={onLogin} /> */}
+            <View style={styles.supportContainer}>
+              <Text style={styles.supportText}>Немає акаунту?</Text>
+              <Text style={styles.supportText}>Зареєструватися</Text>
+            </View>
           </View>
-          <View style={styles.buttonContainer}>
-            <Text style={styles.button}>Увійти</Text>
-            {/* <Button
-              title="Увійти"
-              color="#FF6C00"              
-              onPress={() => Alert.alert("WORK")}
-            /> */}
-          </View>
-          <View style={styles.supportContainer}>
-            <Text style={styles.supportText}>Немає акаунту?</Text>
-            <Text style={styles.supportText}>Зареєструватися</Text>
-          </View>
-        </View>
-      </ImageBackground>
-    </View>
+        </ImageBackground>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -102,6 +145,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
+  inputFocused: { borderColor: "#ff6c00" },
+
   supportContainer: {
     flexDirection: "row",
     gap: 5,
@@ -110,15 +155,8 @@ const styles = StyleSheet.create({
 
   showingPas: {
     position: "absolute",
-    bottom: 15,
+    bottom: "80%",
     right: 16,
-    fontStyle: "normal",
-    fontWeight: 400,
-    fontSize: 16,
-    lineHeight: 19,
-    letterSpacing: 0.16,
-    textAlign: "center",
-    color: "#1B4371",
   },
 
   supportText: {
@@ -140,6 +178,16 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: "#FF6C00",
   },
+
+  // loginBtn: {
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   marginTop: 43,
+  //   width: "100%",
+  //   height: 50,
+  //   borderRadius: 100,
+  //   backgroundColor: "#FF6C00",
+  // },
 
   button: {
     fontWeight: 400,
