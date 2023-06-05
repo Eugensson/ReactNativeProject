@@ -1,39 +1,31 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+
+import { Ionicons, EvilIcons } from "@expo/vector-icons";
+
 import {
-  View,
-  Image,
-  ImageBackground,
-  Text,
-  TextInput,
-  // Button,
-  StyleSheet,
-  Dimensions,
-  Alert,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
+  ImageBackground,
+  Dimensions,
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 
-// import { Ionicons } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
-
-const RegistrationScreen = () => {
+const Registration = () => {
   const [login, setLogin] = useState("");
-  const [mail, setMail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isPasswordShow, setShowPassword] = useState(false);
   const [isLoginFocused, setLoginFocused] = useState(false);
-  const [isMailFocused, setMailFocused] = useState(false);
-  const [isPassFocused, setPassFocused] = useState(false);
+  const [isEmailFocused, setEmailFocused] = useState(false);
+  const [isPasswordFocused, setPasswordFocused] = useState(false);
+  const [isPasswordShow, setShowPassword] = useState(false);
 
-  const onSingUp = () => {
-    Alert.alert("Sing Up", `${login} + ${mail} + ${password}`);
-    console.debug("Sing Up", `${login} + ${mail} + ${password}`);
-    setLogin("");
-    setMail("");
-    setPassword("");
-  };
+  const navigation = useNavigation();
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -46,23 +38,18 @@ const RegistrationScreen = () => {
           resizeMode="cover"
           style={styles.backgroundImage}
         >
-          <View style={styles.registrationContainer}>
+          <View style={styles.contentWrapper}>
             <View style={styles.photoPlaceholder}>
-              <Image
-                style={styles.userImage}
-                source={require("../assets/Avatar.jpg")}
-              />
               <View style={{ position: "absolute", bottom: 10, right: -12 }}>
-                {/* <Ionicons name="add-circle-outline" size={25} color="#ff6c00" /> */}
-                <EvilIcons
+                <Ionicons name="add-circle-outline" size={25} color="#ff6c00" />
+                {/* <EvilIcons
                   name="close-o"
                   size={24}
                   color="#bdbdbd"
                   backgroundColor="#fff"
-                />
+                /> */}
               </View>
             </View>
-
             <Text style={styles.title}>Реєстрація</Text>
             <TextInput
               style={[styles.input, isLoginFocused && styles.inputFocused]}
@@ -73,22 +60,23 @@ const RegistrationScreen = () => {
               onBlur={() => setLoginFocused(false)}
             />
             <TextInput
-              style={[styles.input, isMailFocused && styles.inputFocused]}
+              style={[styles.input, isEmailFocused && styles.inputFocused]}
               placeholder="Адреса електронної пошти"
               keyboardType="email-address"
-              value={mail}
-              onChangeText={setMail}
-              onFocus={() => setMailFocused(true)}
-              onBlur={() => setMailFocused(false)}
+              value={email}
+              onChangeText={setEmail}
+              onFocus={() => setEmailFocused(true)}
+              onBlur={() => setEmailFocused(false)}
             />
-            <View style={[styles.input, isPassFocused && styles.inputFocused]}>
+            <View style={styles.passwordWrapper}>
               <TextInput
+                style={[styles.input, isPasswordFocused && styles.inputFocused]}
                 secureTextEntry={!isPasswordShow}
                 placeholder="Пароль"
                 value={password}
                 onChangeText={setPassword}
-                onFocus={() => setPassFocused(true)}
-                onBlur={() => setPassFocused(false)}
+                onFocus={() => setPasswordFocused(true)}
+                onBlur={() => setPasswordFocused(false)}
               />
               <TouchableOpacity
                 style={styles.showingPas}
@@ -103,13 +91,22 @@ const RegistrationScreen = () => {
                 </View>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.buttonContainer} onPress={onSingUp}>
-              <Text style={styles.button}>Зареєстуватися</Text>
+
+            <TouchableOpacity
+              style={styles.primaryBtn}
+              onPress={() =>
+                navigation.navigate("Home", {
+                  screen: "Post",
+                })
+              }
+            >
+              <Text style={styles.btnText}>Зареєструватися</Text>
             </TouchableOpacity>
-            {/* <Button title="Зареєстуватися" style={styles.registrBtn} onPress={onLogin} /> */}
-            <View style={styles.supportContainer}>
+            <View style={styles.supportWrapper}>
               <Text style={styles.supportText}>Вже є акаунт?</Text>
-              <Text style={styles.supportText}>Увійти</Text>
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                <Text style={styles.supportText}>Увійти</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ImageBackground>
@@ -121,11 +118,12 @@ const RegistrationScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
     width: "100%",
     height: "100%",
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    // padding: 16,
   },
 
   backgroundImage: {
@@ -135,7 +133,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 
-  registrationContainer: {
+  contentWrapper: {
     position: "relative",
     flex: 1,
     flexDirection: "column",
@@ -144,8 +142,6 @@ const styles = StyleSheet.create({
     height: "68%",
     paddingLeft: 16,
     paddingRight: 16,
-    paddingTop: 7,
-    paddingBottom: 7,
     position: "absolute",
     bottom: 0,
     backgroundColor: "#fff",
@@ -167,29 +163,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
 
-  svg: {
-    position: "absolute",
-    bottom: 14,
-    right: -12,
-  },
-
-  userImage: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    borderRadius: 16,
-  },
-
-  addBtnImage: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    color: "#FF6C00",
-  },
-
   title: {
-    marginTop: 84,
-    marginBottom: 33,
+    marginTop: 92,
+    marginBottom: 32,
     fontStyle: "normal",
     fontWeight: 500,
     fontSize: 30,
@@ -200,56 +176,44 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    position: "relative",
     width: "100%",
     height: 50,
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
     borderColor: "#E8E8E8",
     borderRadius: 8,
-    padding: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
     marginBottom: 16,
   },
 
   inputFocused: { borderColor: "#ff6c00" },
 
-  supportContainer: {
-    flexDirection: "row",
-    gap: 5,
-    marginTop: 16,
+  passwordWrapper: {
+    position: "relative",
+    width: "100%",
   },
 
-  showingPas: {
-    position: "absolute",
-    bottom: "80%",
-    right: 16,
-  },
-
-  buttonContainer: {
+  primaryBtn: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 43,
     width: "100%",
+    padding: 16 - 32,
     height: 50,
+    backgroundColor: "#ff6c00",
     borderRadius: 100,
-    backgroundColor: "#FF6C00",
   },
-
-  // registrBtn: {
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  //   marginTop: 43,
-  //   width: "100%",
-  //   height: 50,
-  //   borderRadius: 100,
-  //   backgroundColor: "#FF6C00",
-  // },
-
-  button: {
+  btnText: {
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",
+  },
+  supportWrapper: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 5,
+    // marginTop: 16,
   },
 
   supportText: {
@@ -261,6 +225,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#1B4371",
   },
+
+  showingPas: {
+    position: "absolute",
+    bottom: "50%",
+    right: 16,
+  },
 });
 
-export default RegistrationScreen;
+export default Registration;

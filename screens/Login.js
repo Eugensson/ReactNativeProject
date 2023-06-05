@@ -1,31 +1,25 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+
 import {
   View,
   ImageBackground,
   Text,
   TextInput,
-  // Button,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
 } from "react-native";
 
-const LoginScreen = () => {
-  const [mail, setMail] = useState("");
+const Login = () => {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isEmailFocused, setEmailFocused] = useState(false);
+  const [isPasswordFocused, setPasswordFocused] = useState(false);
   const [isPasswordShow, setShowPassword] = useState(false);
-  const [isMailFocused, setMailFocused] = useState(false);
-  const [isPassFocused, setPassFocused] = useState(false);
-
-  const onLogin = () => {
-    Alert.alert("Log In", `${mail} + ${password}`);
-    console.debug("Log In", `${mail} + ${password}`);
-    setMail("");
-    setPassword("");
-  };
+  const navigation = useNavigation();
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -38,25 +32,27 @@ const LoginScreen = () => {
           resizeMode="cover"
           style={styles.backgroundImage}
         >
-          <View style={styles.loginContainer}>
+          <View style={styles.loginWrapper}>
             <Text style={styles.title}>Увійти</Text>
             <TextInput
-              style={[styles.input, isMailFocused && styles.inputFocused]}
+              style={[styles.input, isEmailFocused && styles.inputFocused]}
               placeholder="Адреса електронної пошти"
               keyboardType="email-address"
-              value={mail}
-              onChangeText={setMail}
-              onFocus={() => setMailFocused(true)}
-              onBlur={() => setMailFocused(false)}
+              value={email}
+              onChangeText={setEmail}
+              onFocus={() => setEmailFocused(true)}
+              onBlur={() => setEmailFocused(false)}
             />
-            <View style={[styles.input, isPassFocused && styles.inputFocused]}>
+            <View
+              style={[styles.input, isPasswordFocused && styles.inputFocused]}
+            >
               <TextInput
                 placeholder="Пароль"
                 secureTextEntry={!isPasswordShow}
                 value={password}
                 onChangeText={setPassword}
-                onFocus={() => setPassFocused(true)}
-                onBlur={() => setPassFocused(false)}
+                onFocus={() => setPasswordFocused(true)}
+                onBlur={() => setPasswordFocused(false)}
               />
               <TouchableOpacity
                 style={styles.showingPas}
@@ -71,30 +67,45 @@ const LoginScreen = () => {
                 </View>
               </TouchableOpacity>
             </View>
-
-            <TouchableOpacity style={styles.buttonContainer} onPress={onLogin}>
-              <Text style={styles.button}>Увійти</Text>
+            <TouchableOpacity
+              style={styles.primaryBtn}
+              onPress={() =>
+                navigation.navigate("Home", {
+                  screen: "Posts",
+                })
+              }
+            >
+              <Text style={styles.btnText}>Увійти</Text>
             </TouchableOpacity>
-            {/* <Button title="Увійти" style={styles.loginBtn} onPress={onLogin} /> */}
-            <View style={styles.supportContainer}>
+            <View style={styles.supportWrapper}>
               <Text style={styles.supportText}>Немає акаунту?</Text>
-              <Text style={styles.supportText}>Зареєструватися</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Registration")}
+              >
+                <Text style={styles.supportText}>Зареєструватися</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ImageBackground>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
+    // <View style={styles.container}>
+    //
+
+    //
+    // </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
     width: "100%",
     height: "100%",
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    // padding: 16,
   },
 
   backgroundImage: {
@@ -104,7 +115,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 
-  loginContainer: {
+  loginWrapper: {
     position: "relative",
     flex: 1,
     flexDirection: "column",
@@ -147,12 +158,6 @@ const styles = StyleSheet.create({
 
   inputFocused: { borderColor: "#ff6c00" },
 
-  supportContainer: {
-    flexDirection: "row",
-    gap: 5,
-    marginTop: 16,
-  },
-
   showingPas: {
     position: "absolute",
     bottom: "80%",
@@ -169,32 +174,37 @@ const styles = StyleSheet.create({
     color: "#1B4371",
   },
 
-  buttonContainer: {
+  primaryBtn: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 43,
     width: "100%",
+    padding: 16 - 32,
     height: 50,
+    backgroundColor: "#ff6c00",
     borderRadius: 100,
-    backgroundColor: "#FF6C00",
   },
-
-  // loginBtn: {
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  //   marginTop: 43,
-  //   width: "100%",
-  //   height: 50,
-  //   borderRadius: 100,
-  //   backgroundColor: "#FF6C00",
-  // },
-
-  button: {
+  btnText: {
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",
   },
+  supportWrapper: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 5,
+    // marginTop: 16,
+  },
+
+  supportText: {
+    fontStyle: "normal",
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 19,
+    letterSpacing: 0.16,
+    textAlign: "center",
+    color: "#1B4371",
+  },
 });
 
-export default LoginScreen;
+export default Login;

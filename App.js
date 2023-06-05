@@ -1,31 +1,16 @@
 import React from "react";
-import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import RegistrationScreens from "./Screens/RegistrationScreen.jsx";
-import LoginScreen from "./Screens/LoginScreen.jsx";
-import Home from "./Screens/Home.jsx";
-
-// import Login from "./screens/Login";
-// import Register from "./screens/Register";
-// import Home from "./screens/Home";
-
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import "react-native-gesture-handler";
 import { useFonts } from "expo-font";
+
+import Login from "./screens/Login";
+import Register from "./screens/Register";
+import Home from "./screens/Home";
 
 const MainStack = createStackNavigator();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
-
-const App = () => {
+export default () => {
   const [fontsLoaded] = useFonts({
     Roboto: require("./assets/fonts/Roboto-Regular.ttf"),
   });
@@ -35,25 +20,29 @@ const App = () => {
   }
   return (
     <NavigationContainer>
-      <MainStack.Navigator>
-        <View style={styles.container}>
-          <MainStack.Screen
-            name="Registration"
-            component={RegistrationScreens}
-          />
-          <MainStack.Screen name="Login" component={LoginScreen} />
-          <MainStack.Screen name="Home" component={Home} />
-
-          {/* <View style={styles.container}>
-          <RegistrationScreens />
-          <LoginScreen />
-          <StatusBar style="auto" />
-        </View> */}
-          <StatusBar style="auto" />
-        </View>
+      <MainStack.Navigator initialRouteName="Registration">
+        <MainStack.Screen
+          name="Registration"
+          component={Register}
+          options={{
+            headerStatusBarHeight: -60,
+          }}
+        />
+        <MainStack.Screen
+          name="Login"
+          component={Login}
+          options={{
+            headerStatusBarHeight: -60,
+          }}
+        />
+        <MainStack.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerStatusBarHeight: -60,
+          }}
+        />
       </MainStack.Navigator>
     </NavigationContainer>
   );
 };
-
-export default App;
